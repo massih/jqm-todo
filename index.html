@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" href="./css/jquery.mobile-1.3.0.min.css" />
-		<script src="./js/jquery-1.8.2.min.js"></script>				
+		<script src="./js/jquery-1.8.2.min.js"></script>
 		<script src="./js/jquery.mobile-1.3.0.min.js"></script>
 
 		<script src="./js/my_js.js"></script>
@@ -16,24 +16,72 @@
 		<div data-role="page" id="dates_page">
 
 			<div data-role="header">
-				<h1>Page Title</h1>
+				<h1>To-Do List </h1>
+				<a href="#newTask" data-position-to="window" data-rel="popup" data-icon="plus" data-transition="slidedown" data-role="button" data-inline="true" data-transition="pop">New Task</a>
 			</div><!-- /header -->
 
 			<div data-role="content">
-				<div data-role="collapsible-set" data-content-theme="d" id="dates_set">
-					<div data-role="collapsible" id="set1" data-collapsed="true">
-						<h3>Section 1</h3>
-						<p>
-							I'm the collapsible content.
-						</p>
-					</div>
-				</div><!-- /content -->
 
-				<div data-role="footer" data-position="fixed" data-tap-toggle="false">
-					<h4>Page Footer</h4>
-				</div><!-- /footer -->
-			</div><!-- /page -->
-			
+				<div data-role="collapsible-set" data-content-theme="d" id="dates_set" data-collapsed-icon="arrow-r	" data-expanded-icon="arrow-d">
+
+				</div>
+
+				<div data-role="popup" id="newTask" class="ui-corner-all ui-content" data-overlay-theme="a">
+					    <a href="#" data-rel="back" data-role="button" data-icon="delete" data-iconpos="notext" class="ui-btn-left">Close</a>
+					    <form>
+						<div style="padding:10px 20px;" >
+							
+							<label for="taskName">Task :</label>
+							<input type="text" name="taskName" id="taskName" value="" placeholder="Task" data-clear-btn="true" >
+
+						    <label for="select-task-type">Task for :</label>
+						    <select name="select-task-type" id="taskType">
+						        <option value="Today">Today</option>
+    							<option value="Tommorow">Tommorow</option>
+    							<option value="Specific-date">Specific date</option>
+    							<option value="Days-of-week">Days of week</option>
+    							<option value="Everyday">Everyday</option>
+    						</select>
+        						
+        					<div id="specificDate" class="my-popup-date">
+        						<label for="date">Date:</label>
+								<input type="date" name="date" id="date" value="" data-clear-btn="true" >
+        					</div>
+
+        					<div id="daysOfWeek" class="my-popup-date">
+        						<fieldset data-role="controlgroup" data-mini="true">
+   									<legend>Choose days :</legend>
+    								<input type="checkbox" name="checkbox-1a" id="checkbox-1a">
+    								<label for="checkbox-1a">Monday</label>
+  									<input type="checkbox" name="checkbox-2a" id="checkbox-2a">
+    								<label for="checkbox-2a">Tuesday</label>
+								    <input type="checkbox" name="checkbox-3a" id="checkbox-3a">
+								    <label for="checkbox-3a">Wednesday</label>
+								    <input type="checkbox" name="checkbox-4a" id="checkbox-4a">
+								    <label for="checkbox-4a">Thursday</label>
+								    <input type="checkbox" name="checkbox-5a" id="checkbox-5a">
+								    <label for="checkbox-5a">Friday</label>
+								    <input type="checkbox" name="checkbox-6a" id="checkbox-6a">
+								    <label for="checkbox-6a">Saturday</label>
+								    <input type="checkbox" name="checkbox-7a" id="checkbox-7a">
+								    <label for="checkbox-7a">Sunday</label>
+
+								</fieldset>
+        					</div>
+
+
+							<input type="button"  data-icon="check" value=" Save ">
+						</div>
+						</form>
+				</div>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" data-position="fixed" data-tap-toggle="false">
+				<a href="#" id='clearAll' data-icon="alert">clear all data</a>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
 	</body>
 
 </html>
