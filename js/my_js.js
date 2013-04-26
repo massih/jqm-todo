@@ -28,22 +28,15 @@ $('#dates_page').live('pagebeforecreate', function(event) {
 });
 
 $('#dates_page').live('pageinit', function() {
+	
 
 	$('.my-popup-date').hide();
-	
-	if (!window.indexedDB) {
-  		window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-  		return false;
-	}
-	
-	var request = window.indexedDB.open("MyTestDatabase");
-	var db;
-	request.onerror = function(event) {
-  		console.log(request.errorCode);
-	};
-	request.onsuccess = function(event) {
-		db = request.result;
-	};
+
+	open_db();
+	// if (!window.indexedDB) {
+  		// window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+  		// return false;
+	// }
 	
 	
 	$("#taskType").change(function() {
@@ -53,9 +46,26 @@ $('#dates_page').live('pageinit', function() {
 		}else if($(this).val() == 'Days-of-week'){
 			$('.my-popup-date').hide();
 			$('#daysOfWeek').show()
+		}else{
+			$('.my-popup-date').hide();
 		}
     	// alert($(this).find("option:selected").text()+' clicked!');
     	 // alert($(this).val());
+	});
+	
+	
+	$('#newTaskSaveButton').bind('click',function(){
+		var $taskName = $('#taskName').val();
+		var $taskType = $('#taskType').find(":selected").val();
+		// console .log("tn-> "+$taskName +" tt-> "+$taskType);
+		if($taskName.length !=0){
+			if($taskType == 'Days-of-week'){
+				
+			}
+			$("#newTask").popup("close");
+		}else{
+			console.log("Incomplete !!!!");	
+		}		
 	});
 	
 	$('#clearAll').bind('click',function(){
