@@ -1,6 +1,4 @@
-/**
- * @author massih
- */
+ 
 
 $('#dates_page').live('pagebeforecreate', function(event) {
 	// window.indexedDB = window.indexedDB || window.webkitIndexedDB ||
@@ -12,19 +10,29 @@ $('#dates_page').live('pagebeforecreate', function(event) {
 	// }
 
 	var $dates_set = $("#dates_set");
-	var today = new Date();
-	var startDate = today.getDate();
-	var endDate = getEndDate(today.getMonth(), today.getFullYear());
-	var dayOfWeek = today.getDay();
 	
-	for ( i = startDate; i <= endDate; i++) {
-		var itemId = i + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
-		var itemTitle = getDayName(dayOfWeek) + "  " + i + "-" + today.getMonthName() + "-" + today.getFullYear();
-		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='"+getDayName(dayOfWeek)+"' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+	// var startDate = today.getDate();
+	// var endDate = getEndDate(today.getMonth(), today.getFullYear());
+	// var dayOfWeek = today.getDay();
+	
+	for(i=0 ; i<14 ; i++){
+		var today = new Date();
+		today.setDate(today.getDate()+i);
+		var itemId = today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+		var itemTitle = getDayName(today.getDay()) + "   " + today.getDate() + "-" + today.getMonthName() + "-" + today.getFullYear();
+		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='"+getDayName(today.getDay())+"' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
 		$dates_set.append(content);
 		$('#'+itemId).append('<ul data-role="listview" id="'+itemId+'-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
-		dayOfWeek = (dayOfWeek + 1) % 7;
 	}
+	
+	// for ( i = startDate; i <= endDate; i++) {
+		// var itemId = i + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+		// var itemTitle = getDayName(dayOfWeek) + "  " + i + "-" + today.getMonthName() + "-" + today.getFullYear();
+		// var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='"+getDayName(dayOfWeek)+"' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+		// $dates_set.append(content);
+		// $('#'+itemId).append('<ul data-role="listview" id="'+itemId+'-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
+		// dayOfWeek = (dayOfWeek + 1) % 7;
+	// }
 });
 
 $('#dates_page').live('pageinit', function() {
@@ -58,9 +66,47 @@ $('#dates_page').live('pageinit', function() {
 		var $taskName = $('#taskName').val();
 		var $taskType = $('#taskType').find(":selected").val();
 		// console .log("tn-> "+$taskName +" tt-> "+$taskType);
+		// **************VALIDATION REQUIRED ***********************
+		
+		if($.trim($taskName).length == 0){
+			// $("#taskName").css('border', "1px solid red"); 
+			 // $('label[for="taskName"]').css({"color":"red","font-Weight": "bold"});
+		}
+// 		
 		if($taskName.length !=0){
-			if($taskType == 'Days-of-week'){
+			if($taskType == 'Today'){
+				var d = new Date();
+				var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+				var task = {timeStamp : d.getTime() , date: date , taskName: $taskName , done : false};
+				saveTask("specificTask",task);
+			}else if($taskType == 'Tommorow'){
+				var d = new Date();
+				d.setDate(d.getDate()+1);
+				var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+				var task = {timeStamp : new Date().getTime() , date: date , taskName: $taskName , done : false};
+				saveTask("specificTask",task);
+			}else if($taskType == 'Specific-date'){
+				var d = new Date($("#dateInput").val());
+				var date = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+				var task = {timeStamp : new Date().getTime() , date: date , taskName: $taskName , done : false};
+				saveTask("specificTask",task);
+			}else if($taskType == 'Days-of-week'){
+				var $daysOfWeek = $('#daysOfWeek input:checked');
+				$daysOfWeek.each(function() {
+					var task = {timeStamp : new Date().getTime() , dayOfWeek : $(this).attr('name') , taskName : $taskName};
+			    	saveTask("generalTask",task);
+				});
 				
+			}else if($taskType == 'Everyday'){
+				console.log("*****EVERYDAY****");
+				for(var i=0;i<7;i++){
+					var d = new Date();
+					// var task = {timeStamp : d.getTime() , dayOfWeek : days[i].toLowerCase , taskName : $taskName};
+					
+					setTimeout(console.log("day -->" + getDayName(i).toLowerCase() +" timeStamp = " + d.getTime()),10000);
+					// saveTask("generalTask",task);
+				}
+				// saveTask("specificTask",task);
 			}
 			$("#newTask").popup("close");
 		}else{
@@ -75,36 +121,77 @@ $('#dates_page').live('pageinit', function() {
 	});
 
 	$(".my_collapsible_dates").bind("expand", function(event) {
+		// getTask("specificTask","date",event.target.id,event.target.id);
+		// getTask("generalTask","dayOfWeek",$('#'+event.target.id).attr('dayOfWeek'),event.target.id);
+		
+		getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
+		
 		var $element = $('#'+event.target.id+' div');
 		var $dayOfWeek = $('#'+event.target.id).attr('dayOfWeek');
 		var $planned = false;
 		var $ul = $('#'+event.target.id+'-ul');
+		
+		// $.when(specificTasks).done(function(result){
+			// console.log("inside WHEN THEN specific task *********" + db);
+			// if(result.length > 0){
+				// ul.append('<li data-role="list-divider">Specific Tasks</li>');
+				// for (var i in specificTasks) {
+					// $ul.append('<li><a href="#"> '+result[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
+				// }
+				// $planned = true;
+			// }
+		// });
+		
 
-		if(supports_html5_storage()){
-			if(localStorage[event.target.id] != null){
-				$ul.append('<li><a href="#"> '+localStorage[event.target.id] +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
-				$planned = true;
-				// $ul.listview( "refresh" );
-			} 
-			if(localStorage[$dayOfWeek] != null || localStorage["everyday"] != null ){
-				ul.append('<li data-role="list-divider">General Tasks</li>');
-				if(localStorage[$dayOfWeek] != null){
-					$ul.append('<li><a href="#"> '+$dayOfWeek +' job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');	
-					$planned = true;				
-				}
-				if(localStorage["everyday"] != null){
-					$ul.append('<li><a href="#"> everyday job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');
-					$planned = true;
-				}
-			}
-			if(!$planned){
-				$ul.append('<li> Do Nothing :)   </li>');
-			}
-			
-		}else{
-			$element.append('<p> HTML5 storage not supported !  </p>');	
-		}
-		localStorage[event.target.id] = "First task !";//TEST ************
+		
+		
+		// if(specificTasks.length > 0){
+			// console.log("inside specific task *********");
+			// ul.append('<li data-role="list-divider">Specific Tasks</li>');
+			// for (var i in specificTasks) {
+				// $ul.append('<li><a href="#"> '+specificTasks[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
+			// }
+			// $planned = true;
+		// }
+		// if(generalTasks.length > 0){
+			// ul.append('<li data-role="list-divider">Genral Tasks</li>');
+			// for (var i in generalTasks) {
+				// $ul.append('<li><a href="#"> '+generalTasks[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
+			// }
+			// $planned = true;
+		// }
+		
+		// if(!$planned){
+			// $ul.append('<li> Do Nothing :)   </li>');
+		// }
+		
+		
+		
+		// if(supports_html5_storage()){
+			// if(localStorage[event.target.id] != null){
+				// $ul.append('<li><a href="#"> '+localStorage[event.target.id] +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
+				// $planned = true;
+				// // $ul.listview( "refresh" );
+			// } 
+			// if(localStorage[$dayOfWeek] != null || localStorage["everyday"] != null ){
+				// ul.append('<li data-role="list-divider">General Tasks</li>');
+				// if(localStorage[$dayOfWeek] != null){
+					// $ul.append('<li><a href="#"> '+$dayOfWeek +' job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');	
+					// $planned = true;				
+				// }
+				// if(localStorage["everyday"] != null){
+					// $ul.append('<li><a href="#"> everyday job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');
+					// $planned = true;
+				// }
+			// }
+			// if(!$planned){
+				// $ul.append('<li> Do Nothing :)   </li>');
+			// }
+// 			
+		// }else{
+			// $element.append('<p> HTML5 storage not supported !  </p>');	
+		// }
+		// localStorage[event.target.id] = "First task !";//TEST ************
 		// console.log(event.target.id);
 		$ul.listview( "refresh" );
 
@@ -116,6 +203,32 @@ $('#dates_page').live('pageinit', function() {
 });
 
 
+function createTaskList(taskType,id,task) {
+
+	var $element = $('#' + id + ' div');
+	var $dayOfWeek = $('#' + id).attr('dayOfWeek');
+	var $planned = false;
+	var $ul = $('#' + id + '-ul'); 
+	$ul.append('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
+	$ul.listview( "refresh" );
+// 	
+	// db.transaction("specificTask").objectStore("specificTask").index("date").openCursor(IDBKeyRange.only(event.target.id)).onsuccess = function(event) {
+		// var cursor = event.target.result;
+		// var counter = 0;
+		// if (cursor) {
+			// if (counter == 0) {
+				// ul.append('<li data-role="list-divider">Specific Tasks</li>');
+			// }
+			// $ul.append('<li><a href="#"> ' + cursor.value.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
+			// if (!$planned) {
+				// $planned = true;
+			// }
+			// counter++;
+			// cursor.
+			// continue();
+		// }
+	// };
+}
 
 
 
