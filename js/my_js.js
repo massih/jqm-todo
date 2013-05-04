@@ -8,22 +8,21 @@ $('#dates_page').live('pagebeforecreate', function(event) {
 	  // window.IDBTransaction = window.webkitIDBTransaction;
 	  // window.IDBKeyRange = window.webkitIDBKeyRange;
 	// }
-
-	var $dates_set = $("#dates_set");
+	
+	for(i=1;i<=52;i++){
+		$("#weekNumberBox").append($("<option></option>").attr("value", i).text(" Week "+i));
+	}
+	var weekNumber = new Date().getWeekNumber();
+	$("#weekNumberBox option[value="+weekNumber+"]").attr("selected",true);
+	createDateSet(weekNumber);
+	
+	
+	// console.log("new WeekNumber -->"+getWeekNumber(new Date()));
 	
 	// var startDate = today.getDate();
 	// var endDate = getEndDate(today.getMonth(), today.getFullYear());
 	// var dayOfWeek = today.getDay();
-	
-	for(i=0 ; i<14 ; i++){
-		var today = new Date();
-		today.setDate(today.getDate()+i);
-		var itemId = today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
-		var itemTitle = getDayName(today.getDay()) + "   " + today.getDate() + "-" + today.getMonthName() + "-" + today.getFullYear();
-		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='"+getDayName(today.getDay())+"' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
-		$dates_set.append(content);
-		$('#'+itemId).append('<ul data-role="listview" id="'+itemId+'-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
-	}
+
 	
 	// for ( i = startDate; i <= endDate; i++) {
 		// var itemId = i + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
@@ -126,10 +125,10 @@ $('#dates_page').live('pageinit', function() {
 		
 		getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
 		
-		var $element = $('#'+event.target.id+' div');
-		var $dayOfWeek = $('#'+event.target.id).attr('dayOfWeek');
-		var $planned = false;
-		var $ul = $('#'+event.target.id+'-ul');
+		// var $element = $('#'+event.target.id+' div');
+		// var $dayOfWeek = $('#'+event.target.id).attr('dayOfWeek');
+		// var $planned = false;
+		// var $ul = $('#'+event.target.id+'-ul');
 		
 		// $.when(specificTasks).done(function(result){
 			// console.log("inside WHEN THEN specific task *********" + db);
@@ -193,7 +192,7 @@ $('#dates_page').live('pageinit', function() {
 		// }
 		// localStorage[event.target.id] = "First task !";//TEST ************
 		// console.log(event.target.id);
-		$ul.listview( "refresh" );
+		// $ul.listview( "refresh" );
 
 	});
 	
@@ -202,14 +201,39 @@ $('#dates_page').live('pageinit', function() {
 	});
 });
 
+function createDateSet(weekNumber){
+	var $dates_set = $("#dates_set");
+	var firstDay = getDatesOfWeek(weekNumber);
+	for ( i = 0; i < 7; i++) {
+		firstDay.setDate(firstDay.getDate() + 1);
+		var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
+		var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
+		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+		$dates_set.append(content);
+		$('#' + itemId).append('<ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
+	}
+}
+
 
 function createTaskList(taskType,id,task) {
 
 	var $element = $('#' + id + ' div');
 	var $dayOfWeek = $('#' + id).attr('dayOfWeek');
 	var $planned = false;
-	var $ul = $('#' + id + '-ul'); 
-	$ul.append('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
+	var $ul = $('#' + id + '-ul');
+	if(taskType == "specificTask"){
+		if($ul.has($('#specificTaskDivider')).length == 0){
+			$ul.append('<li data-role="list-divider" id="specificTaskDivider">Specific Tasks</li>');
+		}	
+		$("#specificTaskDivider").after('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
+	}else if(taskType == "generalTask"){
+		if($ul.has($('#generalTaskDivider')).length == 0){
+			$ul.append('<li data-role="list-divider" id="generalTaskDivider">General Tasks</li>');
+		}	
+		$("#generalTaskDivider").after('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');		
+	}
+	
+	// $ul.append('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
 	$ul.listview( "refresh" );
 // 	
 	// db.transaction("specificTask").objectStore("specificTask").index("date").openCursor(IDBKeyRange.only(event.target.id)).onsuccess = function(event) {
@@ -246,6 +270,37 @@ Date.prototype.getMonthName = function() {
 	var m = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	return m[this.getMonth()];
 }
+// Date.prototype.getWeekNumber = function() {
+// var onejan = new Date(this.getFullYear(),0,1);
+// return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+// }
+Date.prototype.getWeekNumber = function() {
+    // Copy date so don't modify original
+    d = new Date(this);
+    d.setHours(0,0,0);
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+    d.setDate(d.getDate() + 4 - (d.getDay()||7));
+    // Get first day of year
+    var yearStart = new Date(d.getFullYear(),0,1);
+    // Calculate full weeks to nearest Thursday
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+    // Return array of year and week number
+    return weekNo;
+}
+
+
+
+function getDatesOfWeek(weekNumber) {
+	var yearStart = new Date(new Date().getFullYear(), 0, 1);
+	var addition = ((weekNumber - 1) * 7);
+	yearStart.setDate(yearStart.getDate() + addition);
+	var first = yearStart.getDate() - yearStart.getDay(); // First day is the day of the month - the day of the week
+	yearStart.setDate(first);
+	return yearStart;
+}
+
+
 function getDayName(day) {
 	var d = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 	return d[day];

@@ -38,7 +38,7 @@ function open_db(){
 
 	request.onsuccess = function(event) {
 		console.log("Database opened !!!!");
-		console.log(event.target.result.name +" --- "+ event.target.result.version +"---*---"+event.target.result.objectStoreNames.length);
+		console.log("DbName : "+event.target.result.name +" | Version : "+ event.target.result.version +" | number of ObjectStores : "+event.target.result.objectStoreNames.length);
 		db = this.result;
 	};
 }
@@ -94,7 +94,6 @@ function getTasks(dayOfWeek,date){
 	
 	tr.objectStore("generalTask").index("dayOfWeek").openCursor( IDBKeyRange.only(dayOfWeek) ).onsuccess = function(event) {
 		var cursor = event.target.result;
-		console.log("dayOFWeek -->" + dayOfWeek);
 		if (cursor) {
 			createTaskList("generalTask",date,cursor.value);
 			totalTask ++;
