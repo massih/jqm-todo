@@ -114,15 +114,6 @@ $('#dates_page').live('pageinit', function() {
 		createDateSet($(this).val());
 	});
 
-	$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
-		console.log("expand !!!");
-		getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
-	});
-	
-	$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
-		console.log("collapsed !!!");
-		$('#'+event.target.id+'-ul').empty();
-	});
 });
 
 function createDateSet(weekNumber){
@@ -141,15 +132,17 @@ function createDateSet(weekNumber){
 	if($collapsibles.length != 0){
 		$dates_set.collapsibleset({ corners: true });
 		$("#dates_set ul[data-role=listview]").listview();
-		$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
-			console.log("expand !!!");
-			getTasks($('#' + event.target.id).attr('dayOfWeek').toLowerCase(), event.target.id);
-		});
-		$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
-			console.log("collapsed !!!");
-			$('#' + event.target.id + '-ul').empty();
-		}); 
-	}	
+	}
+	
+	$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
+		console.log("expand !!!");
+		getTasks($('#' + event.target.id).attr('dayOfWeek').toLowerCase(), event.target.id);
+	});
+	$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
+		console.log("collapsed !!!");
+		$('#' + event.target.id + '-ul').empty();
+	}); 
+	
 }
 
 
