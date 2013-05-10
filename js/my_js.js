@@ -129,45 +129,27 @@ function createDateSet(weekNumber){
 	var $collapsibles = $("#dates_set div[data-role=collapsible]");
 	var firstDay = getDatesOfWeek(weekNumber);
 	var $dates_set = $("#dates_set");	
-	if($collapsibles.length == 0){
-		for ( i = 0; i < 7; i++) {
-			var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
-			var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
-			var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
-			$dates_set.append(content);
-			$('#' + itemId).append('<div><ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul></div>');
-			firstDay.setDate(firstDay.getDate() + 1);
-			// $("#"+itemId).collapsible();	
-			}
-	}else{
-		$dates_set.find("div[data-role=collapsible]").remove();
-		for ( i = 0; i < 7; i++) {
-			var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
-			var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
-			var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
-			$dates_set.append(content);
-			$('#' + itemId).append('<ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
-			// $('#' + itemId+" ul[data-role=listview]").listview();
-			firstDay.setDate(firstDay.getDate() + 1);
-			// $("#"+itemId).collapsible();	
-			}
+	$dates_set.find("div[data-role=collapsible]").remove();
+	for ( i = 0; i < 7; i++) {
+		var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
+		var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
+		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+		$dates_set.append(content);
+		$('#' + itemId).append('<div><ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul></div>');
+		firstDay.setDate(firstDay.getDate() + 1);
+	}
+	if($collapsibles.length != 0){
 		$dates_set.collapsibleset({ corners: true });
-		$("#dates_set div[data-role=collapsible]").collapsible();
+		$("#dates_set ul[data-role=listview]").listview();
 		$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
 			console.log("expand !!!");
-			getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
+			getTasks($('#' + event.target.id).attr('dayOfWeek').toLowerCase(), event.target.id);
 		});
-	
 		$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
 			console.log("collapsed !!!");
-			$('#'+event.target.id+'-ul').empty();
-		});
-		$("#dates_set ul[data-role=listview]").listview();
-	}
-	// $dates_set.find("div").remove();
-	// $dates_set.collapsible();
-	// $dates_set.collapsibleset( "refresh" );
-
+			$('#' + event.target.id + '-ul').empty();
+		}); 
+	}	
 }
 
 
