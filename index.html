@@ -17,16 +17,17 @@
 		<div data-role="page" id="dates_page">
 
 			<div data-role="header">
-				<h1>To-Do List </h1>
+				<h1 id="headerLabel">To-Do List </h1>
 				<a href="#newTask" data-position-to="window" data-rel="popup" data-icon="plus" data-transition="slidedown" data-role="button" data-inline="true" data-transition="pop">New Task</a>
+				<a href="#" data-position-to="window" data-rel="popup" data-iconpos="right" data-icon="gear" data-transition="slidedown" data-role="button" data-inline="true" data-transition="pop">Settings</a>			
 			</div><!-- /header -->
 
 			<div data-role="content">
 				
 				<div class="ui-grid-b">
-				    <div class="ui-block-a"><a href="#" data-mini="true" data-inline="true" data-role="button" data-icon="arrow-l" data-theme="b">Last Week</a></div>
-				    <div class="ui-block-b" style="text-align:center;"><select name="weekNumberBox" data-mini="true" id="weekNumberBox"></select></div>
-				    <div class="ui-block-c" style="text-align:right;"><a href="#" data-theme="b" data-mini="true" data-inline="true" data-role="button" data-icon="arrow-r" data-iconpos="right">Next Week</a></div>
+				    <div class="ui-block-a"><a href="#" data-mini="true" id="lastWeekBtn" data-inline="true" data-role="button" data-icon="arrow-l" data-theme="b">Last Week</a></div>
+				    <div class="ui-block-b" style="text-align:center;"><select name="weekNumberList" data-mini="true" id="weekNumberList"></select></div>
+				    <div class="ui-block-c" style="text-align:right;"><a href="#" id="nextWeekBtn" data-theme="b" data-mini="true" data-inline="true" data-role="button" data-icon="arrow-r" data-iconpos="right">Next Week</a></div>
 				</div>
 				
 

@@ -1,50 +1,25 @@
  
 
 $('#dates_page').live('pagebeforecreate', function(event) {
-	// window.indexedDB = window.indexedDB || window.webkitIndexedDB ||
-                   // window.mozIndexedDB;
-// 
+	// window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
 	// if ('webkitIndexedDB' in window) {
 	  // window.IDBTransaction = window.webkitIDBTransaction;
 	  // window.IDBKeyRange = window.webkitIDBKeyRange;
 	// }
 	
 	for(i=1;i<=52;i++){
-		$("#weekNumberBox").append($("<option></option>").attr("value", i).text(" Week "+i));
+		$("#weekNumberList").append($("<option></option>").attr("value", i).text(" Week "+i));
 	}
 	var weekNumber = new Date().getWeekNumber();
-	$("#weekNumberBox option[value="+weekNumber+"]").attr("selected",true);
+	$("#weekNumberList option[value="+weekNumber+"]").attr("selected",true).text(" Week " + weekNumber +" (current week) ");
 	createDateSet(weekNumber);
-	
-	
-	// console.log("new WeekNumber -->"+getWeekNumber(new Date()));
-	
-	// var startDate = today.getDate();
-	// var endDate = getEndDate(today.getMonth(), today.getFullYear());
-	// var dayOfWeek = today.getDay();
-
-	
-	// for ( i = startDate; i <= endDate; i++) {
-		// var itemId = i + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
-		// var itemTitle = getDayName(dayOfWeek) + "  " + i + "-" + today.getMonthName() + "-" + today.getFullYear();
-		// var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='"+getDayName(dayOfWeek)+"' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
-		// $dates_set.append(content);
-		// $('#'+itemId).append('<ul data-role="listview" id="'+itemId+'-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
-		// dayOfWeek = (dayOfWeek + 1) % 7;
-	// }
 });
 
 $('#dates_page').live('pageinit', function() {
 	
-
 	$('.my-popup-date').hide();
 
 	open_db();
-	// if (!window.indexedDB) {
-  		// window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-  		// return false;
-	// }
-	
 	
 	$("#taskType").change(function() {
 		if($(this).val() == 'Specific-date'){
@@ -56,10 +31,7 @@ $('#dates_page').live('pageinit', function() {
 		}else{
 			$('.my-popup-date').hide();
 		}
-    	// alert($(this).find("option:selected").text()+' clicked!');
-    	 // alert($(this).val());
 	});
-	
 	
 	$('#newTaskSaveButton').bind('click',function(){
 		var $taskName = $('#taskName').val();
@@ -71,7 +43,6 @@ $('#dates_page').live('pageinit', function() {
 			// $("#taskName").css('border', "1px solid red"); 
 			 // $('label[for="taskName"]').css({"color":"red","font-Weight": "bold"});
 		}
-// 		
 		if($taskName.length !=0){
 			if($taskType == 'Today'){
 				var d = new Date();
@@ -95,13 +66,11 @@ $('#dates_page').live('pageinit', function() {
 					var task = {timeStamp : new Date().getTime() , dayOfWeek : $(this).attr('name') , taskName : $taskName};
 			    	saveTask("generalTask",task);
 				});
-				
 			}else if($taskType == 'Everyday'){
 				console.log("*****EVERYDAY****");
 				for(var i=0;i<7;i++){
 					var d = new Date();
 					// var task = {timeStamp : d.getTime() , dayOfWeek : days[i].toLowerCase , taskName : $taskName};
-					
 					setTimeout(console.log("day -->" + getDayName(i).toLowerCase() +" timeStamp = " + d.getTime()),10000);
 					// saveTask("generalTask",task);
 				}
@@ -118,105 +87,91 @@ $('#dates_page').live('pageinit', function() {
 		localStorage.clear();
 		console.log(localStorage.length);
 	});
+	
+	$('#nextWeekBtn').bind('click',function(){
+		var $selectedWeek = $('#weekNumberList').find(":selected");
+		if($selectedWeek.val() == 52){
+			return;
+		}
+		$selectedWeek.attr("selected",false);
+		$selectedWeek.next("option").attr("selected",true);
+		$("#weekNumberList").selectmenu( "refresh" );
+		createDateSet($('#weekNumberList').find(":selected").val());
+	});
 
-	$(".my_collapsible_dates").bind("expand", function(event) {
-		// getTask("specificTask","date",event.target.id,event.target.id);
-		// getTask("generalTask","dayOfWeek",$('#'+event.target.id).attr('dayOfWeek'),event.target.id);
-		
-		getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
-		
-		// var $element = $('#'+event.target.id+' div');
-		// var $dayOfWeek = $('#'+event.target.id).attr('dayOfWeek');
-		// var $planned = false;
-		// var $ul = $('#'+event.target.id+'-ul');
-		
-		// $.when(specificTasks).done(function(result){
-			// console.log("inside WHEN THEN specific task *********" + db);
-			// if(result.length > 0){
-				// ul.append('<li data-role="list-divider">Specific Tasks</li>');
-				// for (var i in specificTasks) {
-					// $ul.append('<li><a href="#"> '+result[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
-				// }
-				// $planned = true;
-			// }
-		// });
-		
-
-		
-		
-		// if(specificTasks.length > 0){
-			// console.log("inside specific task *********");
-			// ul.append('<li data-role="list-divider">Specific Tasks</li>');
-			// for (var i in specificTasks) {
-				// $ul.append('<li><a href="#"> '+specificTasks[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
-			// }
-			// $planned = true;
+	$('#lastWeekBtn').bind('click',function(){
+		var $selectedWeek = $('#weekNumberList').find(":selected");
+		// if($selectedWeek.val() == 1){
+			// return;
 		// }
-		// if(generalTasks.length > 0){
-			// ul.append('<li data-role="list-divider">Genral Tasks</li>');
-			// for (var i in generalTasks) {
-				// $ul.append('<li><a href="#"> '+generalTasks[i].taskName +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
-			// }
-			// $planned = true;
-		// }
-		
-		// if(!$planned){
-			// $ul.append('<li> Do Nothing :)   </li>');
-		// }
-		
-		
-		
-		// if(supports_html5_storage()){
-			// if(localStorage[event.target.id] != null){
-				// $ul.append('<li><a href="#"> '+localStorage[event.target.id] +'</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');	
-				// $planned = true;
-				// // $ul.listview( "refresh" );
-			// } 
-			// if(localStorage[$dayOfWeek] != null || localStorage["everyday"] != null ){
-				// ul.append('<li data-role="list-divider">General Tasks</li>');
-				// if(localStorage[$dayOfWeek] != null){
-					// $ul.append('<li><a href="#"> '+$dayOfWeek +' job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');	
-					// $planned = true;				
-				// }
-				// if(localStorage["everyday"] != null){
-					// $ul.append('<li><a href="#"> everyday job </a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a></li>');
-					// $planned = true;
-				// }
-			// }
-			// if(!$planned){
-				// $ul.append('<li> Do Nothing :)   </li>');
-			// }
-// 			
-		// }else{
-			// $element.append('<p> HTML5 storage not supported !  </p>');	
-		// }
-		// localStorage[event.target.id] = "First task !";//TEST ************
-		// console.log(event.target.id);
-		// $ul.listview( "refresh" );
-
+		$selectedWeek.attr("selected",false);
+		$selectedWeek.prev("option").attr("selected",true);
+		$("#weekNumberList").selectmenu( "refresh" );
+		createDateSet($('#weekNumberList').find(":selected").val());
 	});
 	
-	$(".my_collapsible_dates").bind("collapse", function(event) {
+	$("#weekNumberList").change(function() {
+		createDateSet($(this).val());
+	});
+
+	$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
+		console.log("expand !!!");
+		getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
+	});
+	
+	$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
+		console.log("collapsed !!!");
 		$('#'+event.target.id+'-ul').empty();
 	});
 });
 
 function createDateSet(weekNumber){
-	var $dates_set = $("#dates_set");
+	var $collapsibles = $("#dates_set div[data-role=collapsible]");
 	var firstDay = getDatesOfWeek(weekNumber);
-	for ( i = 0; i < 7; i++) {
-		firstDay.setDate(firstDay.getDate() + 1);
-		var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
-		var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
-		var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
-		$dates_set.append(content);
-		$('#' + itemId).append('<ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
+	var $dates_set = $("#dates_set");	
+	if($collapsibles.length == 0){
+		for ( i = 0; i < 7; i++) {
+			var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
+			var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
+			var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+			$dates_set.append(content);
+			$('#' + itemId).append('<div><ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul></div>');
+			firstDay.setDate(firstDay.getDate() + 1);
+			// $("#"+itemId).collapsible();	
+			}
+	}else{
+		$dates_set.find("div[data-role=collapsible]").remove();
+		for ( i = 0; i < 7; i++) {
+			var itemId = firstDay.getDate() + "-" + (firstDay.getMonth() + 1) + "-" + firstDay.getFullYear();
+			var itemTitle = getDayName(firstDay.getDay()) + "   " + firstDay.getDate() + "-" + firstDay.getMonthName() + "-" + firstDay.getFullYear();
+			var content = "<div data-role='collapsible' class='my_collapsible_dates' dayOfWeek='" + getDayName(firstDay.getDay()) + "' id='" + itemId + "'><h3>" + itemTitle + "</h3></div>";
+			$dates_set.append(content);
+			$('#' + itemId).append('<ul data-role="listview" id="' + itemId + '-ul" data-split-icon="minus" data-split-theme="d" data-inset="true" data-divider-theme="d"></ul>');
+			// $('#' + itemId+" ul[data-role=listview]").listview();
+			firstDay.setDate(firstDay.getDate() + 1);
+			// $("#"+itemId).collapsible();	
+			}
+		$dates_set.collapsibleset({ corners: true });
+		$("#dates_set div[data-role=collapsible]").collapsible();
+		$("#dates_set div[data-role=collapsible]").bind("expand", function(event) {
+			console.log("expand !!!");
+			getTasks($('#'+event.target.id).attr('dayOfWeek').toLowerCase(),event.target.id);
+		});
+	
+		$("#dates_set div[data-role=collapsible]").bind("collapse", function(event) {
+			console.log("collapsed !!!");
+			$('#'+event.target.id+'-ul').empty();
+		});
+		$("#dates_set ul[data-role=listview]").listview();
 	}
+	// $dates_set.find("div").remove();
+	// $dates_set.collapsible();
+	// $dates_set.collapsibleset( "refresh" );
+
 }
 
 
 function createTaskList(taskType,id,task) {
-
 	var $element = $('#' + id + ' div');
 	var $dayOfWeek = $('#' + id).attr('dayOfWeek');
 	var $planned = false;
@@ -233,35 +188,14 @@ function createTaskList(taskType,id,task) {
 		$("#generalTaskDivider").after('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');		
 	}
 	
-	// $ul.append('<li><a href="#" > ' + task.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
-	$ul.listview( "refresh" );
-// 	
-	// db.transaction("specificTask").objectStore("specificTask").index("date").openCursor(IDBKeyRange.only(event.target.id)).onsuccess = function(event) {
-		// var cursor = event.target.result;
-		// var counter = 0;
-		// if (cursor) {
-			// if (counter == 0) {
-				// ul.append('<li data-role="list-divider">Specific Tasks</li>');
-			// }
-			// $ul.append('<li><a href="#"> ' + cursor.value.taskName + '</a><a href="#purchase" data-rel="popup" data-position-to="window" data-transition="pop">Delete item</a> </li>');
-			// if (!$planned) {
-				// $planned = true;
-			// }
-			// counter++;
-			// cursor.
-			// continue();
-		// }
-	// };
+	if ($ul.hasClass('ui-listview')) {
+        $ul.listview('refresh');
+    } else {
+        $ul.trigger('create');
+    }
+	// $ul.listview( "refresh" );
 }
 
-
-
-function save_task(){
-	if (!window.indexedDB) {
-  	  window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.")
-	}
-	
-}
 
 
 
@@ -270,11 +204,8 @@ Date.prototype.getMonthName = function() {
 	var m = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	return m[this.getMonth()];
 }
-// Date.prototype.getWeekNumber = function() {
-// var onejan = new Date(this.getFullYear(),0,1);
-// return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
-// }
-Date.prototype.getWeekNumber = function() {
+
+Date.prototype.getWeek = function() {
     // Copy date so don't modify original
     d = new Date(this);
     d.setHours(0,0,0);
@@ -288,6 +219,33 @@ Date.prototype.getWeekNumber = function() {
     // Return array of year and week number
     return weekNo;
 }
+Date.prototype.getWeekNumber = function () {
+/*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.epoch-calendar.com */
+	var dowOffset = 1;
+	dowOffset = typeof(dowOffset) == 'int' ? dowOffset : 0; //default dowOffset to zero
+	var newYear = new Date(this.getFullYear(),0,1);
+	var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+	day = (day >= 0 ? day : day + 7);
+	var daynum = Math.floor((this.getTime() - newYear.getTime() - 
+	(this.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+	var weeknum;
+	//if the year starts before the middle of a week
+	if(day < 4) {
+		weeknum = Math.floor((daynum+day-1)/7) + 1;
+		if(weeknum > 52) {
+			nYear = new Date(this.getFullYear() + 1,0,1);
+			nday = nYear.getDay() - dowOffset;
+			nday = nday >= 0 ? nday : nday + 7;
+			/*if the next year starts before the middle of
+ 			  the week, it is week #1 of that year*/
+			weeknum = nday < 4 ? 1 : 53;
+		}
+	}
+	else {
+		weeknum = Math.floor((daynum+day-1)/7);
+	}
+	return weeknum;
+};
 
 
 

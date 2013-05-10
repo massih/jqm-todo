@@ -5,12 +5,15 @@
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
 var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || { READ_WRITE: 'readwrite' } ;
 
-var dbVersion = 1;
+var dbVersion = 2;
 var dbName = "jqmTodoDB";
 var db;
 
 function open_db(){
-	var request = indexedDB.open(dbName,dbVersion+1);
+	if(!indexedDB){
+		alert("your browser doesnt support HTML5 storage, It sucks !!!!");
+	}
+	var request = indexedDB.open(dbName,dbVersion);
 
 	request.onerror = function(event) {
   		console.log(request.errorCode);
@@ -44,6 +47,8 @@ function open_db(){
 }
 
 function saveTask(ObjStoreName, taskObj){
+	console.log("objName  --> " + ObjStoreName);
+	console.log("TaskObj--> " + taskObj.dayOfWeek +" -- "+taskObj.taskName+" -- "+taskObj.timeStamp);
 	var request = db.transaction(ObjStoreName,"readwrite").objectStore(ObjStoreName).add(taskObj);
 	request.onsuccess = function(event){
 		console.log("save successfully --> " + taskObj.taskName);
@@ -82,7 +87,7 @@ function deleteTask(){
 function getTasks(dayOfWeek,date){
 	var totalTask = 0;
 	var tr = db.transaction(["specificTask","generalTask"]);
- 
+	console.log("dow->"+dayOfWeek+"  ***   date->"+date); 
 	tr.objectStore("specificTask").index("date").openCursor( IDBKeyRange.only(date) ).onsuccess = function(event) {
 		var cursor = event.target.result;
 		if (cursor) {
@@ -100,7 +105,6 @@ function getTasks(dayOfWeek,date){
 	    	cursor.continue();
 	  	}	  	
 	};
-	
 	// if(){}
 	// db.transaction("specificTask").objectStore("specificTask").openCursor().onsuccess = function(event) {
 	  // var cursor = event.target.result;
