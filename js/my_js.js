@@ -21,6 +21,9 @@ $('#dates_page').live('pageinit', function() {
 
 	open_db();
 	
+	// handleClientLoad();
+	
+	
 	$("#taskType").change(function() {
 		if($(this).val() == 'Specific-date'){
 			$('.my-popup-date').hide();
@@ -82,11 +85,11 @@ $('#dates_page').live('pageinit', function() {
 		}		
 	});
 	
-	$('#clearAll').bind('click',function(){
-		console.log(localStorage.length);
-		localStorage.clear();
-		console.log(localStorage.length);
-	});
+	// $('#clearAll').bind('click',function(){
+		// console.log(localStorage.length);
+		// localStorage.clear();
+		// console.log(localStorage.length);
+	// });
 	
 	$('#nextWeekBtn').bind('click',function(){
 		var $selectedWeek = $('#weekNumberList').find(":selected");
