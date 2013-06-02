@@ -5,7 +5,9 @@ var scopes = 'https://www.googleapis.com/auth/tasks';
 
 function handleClientLoad() {
 	gapi.client.setApiKey(apiKey);
-	window.setTimeout(checkAuth, 1);
+	console.log("API key set !");
+	// $('#loginPopupButton').trigger('click');
+	// window.setTimeout(checkAuth, 1);
 }
 
 function checkAuth() {
@@ -17,19 +19,19 @@ function checkAuth() {
 }
 
 function handleAuthResult(authResult) {
-	var authorizeButton = document.getElementById('clearAll');
+	// var authorizeButton = document.getElementById('clearAll');
 	if (authResult && !authResult.error) {
-		authorizeButton.style.visibility = 'hidden';
+		// authorizeButton.style.visibility = 'hidden';
 		makeApiCall();
 		console.log("GAPI --> if true");
 	} else {
 		console.log("GAPI --> if NOT true");
-		authorizeButton.style.visibility = '';
-		authorizeButton.onclick = handleAuthClick;
+		// authorizeButton.style.visibility = '';
+		// authorizeButton.onclick = handleAuthClick;
 	}
 }
 
-function handleAuthClick(event) {
+function handleAuthClick() {
 	gapi.auth.authorize({
 		client_id : clientId,
 		scope : scopes,

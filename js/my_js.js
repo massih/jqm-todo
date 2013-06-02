@@ -24,6 +24,14 @@ $('#dates_page').live('pageinit', function() {
 	// handleClientLoad();
 	
 	
+	$('#loginAllow').bind('click',function(){
+		handleAuthClick();
+	});
+
+	$('#loginCancel').bind('click',function(){
+		$('#loginPopup').popup('close');
+	});
+	
 	$("#taskType").change(function() {
 		if($(this).val() == 'Specific-date'){
 			$('.my-popup-date').hide();
@@ -85,11 +93,13 @@ $('#dates_page').live('pageinit', function() {
 		}		
 	});
 	
-	// $('#clearAll').bind('click',function(){
-		// console.log(localStorage.length);
+	$('#clearAll').bind('click',function(){
+		console.log("clicked !!!!!");
+		$('#loginPopupButton').trigger("click");
+		// $('#loginPopup').popup("open");
 		// localStorage.clear();
-		// console.log(localStorage.length);
-	// });
+		// console.log(localStorage.length);	
+	});
 	
 	$('#nextWeekBtn').bind('click',function(){
 		var $selectedWeek = $('#weekNumberList').find(":selected");
@@ -117,7 +127,9 @@ $('#dates_page').live('pageinit', function() {
 		createDateSet($(this).val());
 	});
 
+	$('#loginPopupButton').trigger("click");
 });
+
 
 function createDateSet(weekNumber){
 	var $collapsibles = $("#dates_set div[data-role=collapsible]");
