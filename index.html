@@ -19,7 +19,7 @@
 	</head>
 
 	<body>
-		<div data-role="page" id="loginPage">
+		<div data-role="page" id="login_page">
 			
 			<div data-role="header">
 				<h1>Login Page</h1>
@@ -27,21 +27,15 @@
 
 			<div data-role="content" style="text-align:center;">
 
-				<div class="infobox-container">
-
-					<div class="triangle-l"> </div>
-					<div class="triangle-r"> </div>
-
-					<div class="infobox">
-						<h3><span>Do you want to use your Google account ?</span></h3>
-						<p>
-							This is the content of the infobox.
-						<p/>
+				<a href="#loginPopup" id="loginPopupButton" data-transition="pop" data-position-to="window" data-rel="popup" data-role="button" style="display: none">Login</a>
+				<div data-role="popup" id="loginPopup" class="ui-content ui-corner-all" data-overlay-theme="a" data-dismissible="false">
+					<div style="padding:20px 20px;">
+						<h3 class="ui-title">Do you want to use your google account ?</h3>
+						<a href="#" id="loginAllow"  data-role="button"  data-theme="">Yes, log me in</a>
+						<a href="#dates_page" id="loginCancel" data-role="button">No, thanks</a>
 					</div>
-
 				</div>
-
-
+			
 			</div><!-- /content -->
 
 			<div data-role="footer" data-position="fixed" data-tap-toggle="false">
@@ -121,15 +115,6 @@
 						</form>
 				</div>
 				
-				<a href="#loginPopup" id="loginPopupButton" data-transition="pop" data-position-to="window" data-rel="popup" data-role="button" style="display: none">Login</a>
-				<div data-role="popup" id="loginPopup" class="ui-content ui-corner-all" data-overlay-theme="a" data-dismissible="">
-					<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-left">Close</a>
-					<div style="padding:20px 20px;">
-					 	<h3 class="ui-title">Do you want to use your google account ?</h3>
-						<a href="#" id="loginAllow"  data-role="button"  data-theme="">Yes, log me in</a>
- 				        <a href="#" id="loginCancel" data-role="button"  data-rel="back">No, thanks</a>
-					</div>
-				</div>
 
 			</div><!-- /content -->
 

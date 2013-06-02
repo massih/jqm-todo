@@ -1,4 +1,19 @@
  
+$('#login_page').live('pageinit', function(event) {
+	
+	$('#loginAllow').bind('click',function(){
+		// $('#loginPopup').popup('close');
+		console.log("loign ALLOW");
+		handleAuthClick();
+	});
+
+	// $('#loginCancel').bind('click',function(){
+		// $('#loginPopup').popup('close');
+	// });
+	
+	$('#loginPopupButton').trigger("click");
+});
+
 
 $('#dates_page').live('pagebeforecreate', function(event) {
 	// window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
@@ -22,16 +37,7 @@ $('#dates_page').live('pageinit', function() {
 	open_db();
 	
 	// handleClientLoad();
-	
-	
-	$('#loginAllow').bind('click',function(){
-		handleAuthClick();
-	});
-
-	$('#loginCancel').bind('click',function(){
-		$('#loginPopup').popup('close');
-	});
-	
+		
 	$("#taskType").change(function() {
 		if($(this).val() == 'Specific-date'){
 			$('.my-popup-date').hide();
@@ -127,7 +133,7 @@ $('#dates_page').live('pageinit', function() {
 		createDateSet($(this).val());
 	});
 
-	$('#loginPopupButton').trigger("click");
+
 });
 
 
