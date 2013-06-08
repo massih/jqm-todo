@@ -22,8 +22,8 @@ function handleAuthResult(authResult) {
 	// var authorizeButton = document.getElementById('clearAll');
 	if (authResult && !authResult.error) {
 		// authorizeButton.style.visibility = 'hidden';
-		makeApiCall();
 		console.log("GAPI --> if true");
+		makeApiCall();
 	} else {
 		console.log("GAPI --> if NOT true");
 		// authorizeButton.style.visibility = '';
@@ -42,7 +42,33 @@ function handleAuthClick() {
 
 // Load the API and make an API call.  Display the results on the screen.
 function makeApiCall() {
-	console.log("GAPI --> makeApiCall() function loaded");
+	// console.log(gapi.auth.getToken());
+	// gapi.client.load('oauth2', 'v2', function(){
+		// gapi.client.oauth2.userinfo.v2.me.get().execute(function(resp){
+			// console.log( resp);	
+		// });
+// 		
+	// });
+	$.mobile.loading( "hide" );
+	// $('#loginPopup').popup('close');
+	$.mobile.changePage( "#dates_page", { transition: "slideup", changeHash: false });
+	gapi.client.load('tasks', 'v1', handleLoadedApi);
+
+}
+
+function handleLoadedApi(){
+	// console.log(gapi.client.tasks.tasklists.list());
+	gapi.client.tasks.tasklists.list().execute(function(resp){
+		var taskLists = resp.items;
+		for(i in taskLists){
+			console.log("Tasklist --> " + i +"-"+taskLists[i].title);
+		}
+	});
+	// var request = gapi.client.plus.people.get({
+			// 'userId' : 'me'
+		// });
+}
+
 	// gapi.client.load('plus', 'v1', function() {
 		// var request = gapi.client.plus.people.get({
 			// 'userId' : 'me'
@@ -57,7 +83,7 @@ function makeApiCall() {
 			// document.getElementById('content').appendChild(heading);
 		// });
 	// });
-}
+
 
 //
 // var restRequest = gapi.client.request({

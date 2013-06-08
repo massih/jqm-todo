@@ -1,15 +1,18 @@
  
 $('#login_page').live('pageinit', function(event) {
 	
+	open_db();
 	$('#loginAllow').bind('click',function(){
-		// $('#loginPopup').popup('close');
-		console.log("loign ALLOW");
 		handleAuthClick();
+		$.mobile.loading( "show", {
+	            text: '',
+	            textVisible: false,
+	            theme: 'd',
+	            textonly: false,
+	            html: ''
+	    });
+		
 	});
-
-	// $('#loginCancel').bind('click',function(){
-		// $('#loginPopup').popup('close');
-	// });
 	
 	$('#loginPopupButton').trigger("click");
 });
@@ -34,8 +37,6 @@ $('#dates_page').live('pageinit', function() {
 	
 	$('.my-popup-date').hide();
 
-	open_db();
-	
 	// handleClientLoad();
 		
 	$("#taskType").change(function() {
