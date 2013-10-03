@@ -5,9 +5,6 @@ var scopes = 'https://www.googleapis.com/auth/tasks';
 
 function handleClientLoad() {
 	gapi.client.setApiKey(apiKey);
-	console.log("API key set !");
-	// $('#loginPopupButton').trigger('click');
-	// window.setTimeout(checkAuth, 1);
 }
 
 function checkAuth() {
@@ -19,15 +16,11 @@ function checkAuth() {
 }
 
 function handleAuthResult(authResult) {
-	// var authorizeButton = document.getElementById('clearAll');
 	if (authResult && !authResult.error) {
-		// authorizeButton.style.visibility = 'hidden';
 		console.log("GAPI --> if true");
 		makeApiCall();
 	} else {
 		console.log("GAPI --> if NOT true");
-		// authorizeButton.style.visibility = '';
-		// authorizeButton.onclick = handleAuthClick;
 	}
 }
 
@@ -58,8 +51,9 @@ function makeApiCall() {
 
 function handleLoadedApi(){
 	// console.log(gapi.client.tasks.tasklists.list());
-	gapi.client.tasks.tasklists.list().execute(function(resp){
-		var taskLists = resp.items;
+	gapi.client.tasks.tasklists.list().execute(function(response){
+		console.log(response)
+		var taskLists = response.items;
 		for(i in taskLists){
 			console.log("Tasklist --> " + i +"-"+taskLists[i].title);
 		}
