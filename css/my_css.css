@@ -1,0 +1,13 @@
+@font-face {
+	font-family: robotoFont;
+	src: url('./fonts/Roboto-Regular.ttf');
+}
+	
+body *{
+	font-family: "robotoFont";
+	font-weight: normal;
+}
+
+.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-bar-a,.ui-body-a,.ui-btn-up-a,.ui-btn-hover-a,.ui-btn-down-a,.ui-body-a input,.ui-body-a select,.ui-body-a textarea,.ui-body-a$
+    font-family: "robotoFont";
+}

@@ -1,23 +1,24 @@
 
 var clientId = '44447218164-3i2o9cj5cgm1qnsq9e3rjdajcq8hsjvd.apps.googleusercontent.com';
-var apiKey = 'AIzaSyCuVQDQfQg4QWmYdi2MxbyUMNJHTJgVBno';
+// var apiKey = 'AIzaSyCuVQDQfQg4QWmYdi2MxbyUMNJHTJgVBno';
+// var browserAPIKey = 'AIzaSyC6PCtJnZkggKoE4_-jL0gQwa3leoFmAGA';
 var scopes = 'https://www.googleapis.com/auth/tasks';
 
-function handleClientLoad() {
-	gapi.client.setApiKey(apiKey);
-}
+// function handleClientLoad() {
+	// gapi.client.setApiKey(apiKey);
+// }
 
-function checkAuth() {
-	gapi.auth.authorize({
-		client_id : clientId,
-		scope : scopes,
-		immediate : true
-	}, handleAuthResult);
-}
+// function checkAuth() {
+	// gapi.auth.authorize({
+		// client_id : clientId,
+		// scope : scopes,
+		// immediate : true
+	// }, handleAuthResult);
+// }
 
 function handleAuthResult(authResult) {
 	if (authResult && !authResult.error) {
-		console.log("GAPI --> if true");
+		console.log("GAPI --> if true%(*&^(*&^(*&^(*))))");
 		makeApiCall();
 	} else {
 		console.log("GAPI --> if NOT true");
@@ -52,7 +53,7 @@ function makeApiCall() {
 function handleLoadedApi(){
 	// console.log(gapi.client.tasks.tasklists.list());
 	gapi.client.tasks.tasklists.list().execute(function(response){
-		console.log(response)
+		console.log(response);
 		var taskLists = response.items;
 		for(i in taskLists){
 			console.log("Tasklist --> " + i +"-"+taskLists[i].title);
